@@ -16,6 +16,7 @@ CHAT_LLM_BASE_URL=https://api.example.com/v1
 ```sh
 # List every model available to the configured key
 npm run models
+node cli.js --list-models
 
 # Interactively select a model
 npm start
@@ -33,7 +34,7 @@ node cli.js --model model-id --db results/benchmarks.sqlite
 
 Run `node cli.js --help` for all options. If the provider omits token usage in its streaming response, the CLI marks throughput with `~` and estimates token count from output length.
 
-Successful runs are saved to `inference-speed-test.sqlite` by default. Each row in the `speed_tests` table includes the model, provider derived from the base URL (`api.openrouter.ai` becomes `openrouter`), timings, token throughput, request settings, and timestamp. Set `SPEED_TEST_DB` or use `--db` to change the location. API keys and generated responses are not stored.
+Successful runs are saved to `db/inference-speed-test.sqlite` by default. The CLI creates the database directory automatically. Each row in the `speed_tests` table includes the model, provider derived from the base URL (`api.openrouter.ai` becomes `openrouter`), timings, token throughput, request settings, and timestamp. Set `SPEED_TEST_DB` or use `--db` to change the location. API keys and generated responses are not stored.
 
 ## Programmatic model listing
 

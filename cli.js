@@ -8,7 +8,7 @@ const readline = require('node:readline/promises');
 const { DatabaseSync } = require('node:sqlite');
 
 const DEFAULT_PROMPT = 'Explain why low-latency inference matters in exactly 100 words.';
-const DEFAULT_DB_PATH = 'inference-speed-test.sqlite';
+const DEFAULT_DB_PATH = path.join('db', 'inference-speed-test.sqlite');
 
 function loadEnv(file = path.join(process.cwd(), '.env')) {
   if (!fs.existsSync(file)) return;
@@ -52,6 +52,7 @@ function parseArgs(argv) {
 
     switch (arg) {
       case '-h': case '--help': options.help = true; break;
+      case '-l': case '--list-models': options.command = 'models'; break;
       case '-m': case '--model': options.models.push(next()); break;
       case '-a': case '--all': options.all = true; break;
       case '-r': case '--runs': options.runs = positiveInteger(next(), arg); break;
@@ -101,6 +102,9 @@ function providerFromBaseUrl(baseUrl) {
 }
 
 function openResultsDatabase(file = process.env.SPEED_TEST_DB || DEFAULT_DB_PATH) {
+  if (file !== ':memory:') {
+    fs.mkdirSync(path.dirname(path.resolve(file)), { recursive: true });
+  }
   const database = new DatabaseSync(file);
   database.exec(`
     CREATE TABLE IF NOT EXISTS speed_tests (
@@ -324,10 +328,12 @@ function printHelp() {
   process.stdout.write(`Usage:
   node cli.js                         Interactively choose and test a model
   node cli.js models                  List models available with the env credentials
+  node cli.js --list-models           List models using a flag
   node cli.js --model MODEL           Test one model
   node cli.js --all                   Test every available model
 
 Options:
+  -l, --list-models       List models available to the configured API key
   -m, --model MODEL       Model to test (repeatable)
   -a, --all               Test all discovered models
   -r, --runs NUMBER       Runs per model (default: 3)
@@ -335,7 +341,7 @@ Options:
       --max-tokens N      Maximum output tokens (default: 128)
       --temperature N     Sampling temperature (default: 0)
       --timeout SECONDS   Request timeout (default: 120)
-      --db PATH           SQLite results file (default: inference-speed-test.sqlite)
+      --db PATH           SQLite results file (default: db/inference-speed-test.sqlite)
       --show-output       Print generated text while testing
       --json              Emit machine-readable JSON
   -h, --help              Show this help

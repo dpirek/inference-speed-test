@@ -21,7 +21,7 @@ test('parseArgs supports benchmark options', () => {
     timeout: 120000,
     prompt: 'Explain why low-latency inference matters in exactly 100 words.',
     models: ['alpha', 'beta'],
-    dbPath: 'inference-speed-test.sqlite',
+    dbPath: 'db/inference-speed-test.sqlite',
     json: true,
   });
 });
@@ -29,6 +29,12 @@ test('parseArgs supports benchmark options', () => {
 test('parseArgs rejects invalid values', () => {
   assert.throws(() => parseArgs(['--runs', '0']), /positive integer/);
   assert.throws(() => parseArgs(['--wat']), /Unknown argument/);
+});
+
+test('parseArgs supports both model-list commands', () => {
+  assert.equal(parseArgs(['models']).command, 'models');
+  assert.equal(parseArgs(['--list-models']).command, 'models');
+  assert.equal(parseArgs(['-l', '--json']).command, 'models');
 });
 
 test('parseSseEvent extracts OpenAI data lines', () => {
