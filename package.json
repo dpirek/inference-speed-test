@@ -1,0 +1,34 @@
+{
+  "name": "inference-speed-test",
+  "version": "1.0.0",
+  "description": "CLI speed test for OpenAI-compatible model inference APIs",
+  "main": "cli.js",
+  "bin": {
+    "inference-speed-test": "./cli.js"
+  },
+  "scripts": {
+    "start": "node cli.js",
+    "models": "node cli.js models",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dpirek/inference-speed-test.git"
+  },
+  "keywords": [
+    "llm",
+    "benchmark",
+    "inference",
+    "cli"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "bugs": {
+    "url": "https://github.com/dpirek/inference-speed-test/issues"
+  },
+  "homepage": "https://github.com/dpirek/inference-speed-test#readme"
+}
